@@ -1,0 +1,93 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMHzWi8JS6NuENQAG1fiej0",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "ir",
+      "display_name": "R"
+    },
+    "language_info": {
+      "name": "R"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/pineda0021/Math-227/blob/main/Math227_HypoMean_Data\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "hypothesis_test_mean_data <- function(sample_data, population_mean, alpha = 0.05, tails = \"two\", decimal_places = 2) {\n",
+        "  # Calculate sample statistics\n",
+        "  sample_mean <- mean(sample_data)\n",
+        "  sample_std <- sd(sample_data)\n",
+        "  sample_size <- length(sample_data)\n",
+        "\n",
+        "  # Calculate the t-critical value\n",
+        "  degrees_of_freedom <- sample_size - 1\n",
+        "  t_crit_left <- -abs(qt(alpha, df = degrees_of_freedom))\n",
+        "  t_crit_right <- abs(qt(alpha, df = degrees_of_freedom))\n",
+        "\n",
+        "  # Calculate the standard error\n",
+        "  se <- sample_std / sqrt(sample_size)\n",
+        "\n",
+        "  # Calculate the test statistic\n",
+        "  t_stat <- (sample_mean - population_mean) / se\n",
+        "\n",
+        "  # Calculate the critical values and p-value based on the tail\n",
+        "  if (tails == \"left\") {\n",
+        "    crit_val <- t_crit_left\n",
+        "    p_val <- pt(t_stat, df = degrees_of_freedom)\n",
+        "    conclusion <- ifelse(t_stat < crit_val, \"Reject the null hypothesis\", \"Do not reject the null hypothesis\")\n",
+        "  } else if (tails == \"right\") {\n",
+        "    crit_val <- t_crit_right\n",
+        "    p_val <- 1 - pt(t_stat, df = degrees_of_freedom)\n",
+        "    conclusion <- ifelse(t_stat > crit_val, \"Reject the null hypothesis\", \"Do not reject the null hypothesis\")\n",
+        "  } else {\n",
+        "    crit_val_left <- t_crit_left\n",
+        "    crit_val_right <- t_crit_right\n",
+        "    p_val <- 2 * (1 - pt(abs(t_stat), df = degrees_of_freedom))\n",
+        "    conclusion <- ifelse(abs(t_stat) > crit_val_right || abs(t_stat) < crit_val_left, \"Reject the null hypothesis\", \"Do not reject the null hypothesis\")\n",
+        "  }\n",
+        "\n",
+        "  # Print the results\n",
+        "  t_stat <- round(t_stat, digits = decimal_places)\n",
+        "\n",
+        "  if (tails == \"two\") {\n",
+        "    crit_val_left <- round(crit_val_left, digits = decimal_places)\n",
+        "    crit_val_right <- round(crit_val_right, digits = decimal_places)\n",
+        "    cat(\"Critical values: \", crit_val_left, \", \", crit_val_right, \"\\n\")\n",
+        "  } else {\n",
+        "    crit_val <- round(crit_val, digits = decimal_places)\n",
+        "    cat(\"Critical value: \", crit_val, \"\\n\")\n",
+        "  }\n",
+        "  cat(\"Test Stats:\", t_stat, \"\\n\")\n",
+        "\n",
+        "  # Format and print the p-value with the specified number of decimal places\n",
+        "  p_val_formatted <- format(p_val, nsmall = decimal_places)\n",
+        "  cat(\"P-value: \", p_val_formatted, \"\\n\")\n",
+        "\n",
+        "  cat(\"Conclusion: \", conclusion, \"\\n\")\n",
+        "  cat(\"Los Angeles City College by Professor Edward Pineda-Castro\\n\")\n",
+        "}"
+      ],
+      "metadata": {
+        "id": "9HJUoDM8TsQ-"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
